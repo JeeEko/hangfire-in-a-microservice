@@ -43,7 +43,17 @@ namespace Jobs.Service.Controllers
             Uri sendEndpointUri = new("queue:hangfire");
 
             var sendEndpoint = await _bus.GetSendEndpoint(sendEndpointUri);
-            await sendEndpoint.ScheduleRecurringSend<RecurringMessage>( new Uri($"queue:ahmed-kassem"), new recurring { StartTime = DateTime.Now, ScheduleId = "hit2", CronExpression = "* * * * *", },new RecurringMessage { Id =21, Name = "test" });
+            await sendEndpoint.ScheduleRecurringSend<RecurringMessage>( new Uri($"queue:ahmed-kassem"), new recurring { TimeZoneId="Egypt", EndTime=DateTime.Now.AddMinutes(1).AddSeconds(20),StartTime = DateTime.Now, ScheduleId = "hit2", CronExpression = "* * * * *", },new RecurringMessage { Id =21, Name = "test" });
+            await _bus.StartAsync();
+            //await _recurringScheduler.ScheduleRecurringSend<DoSomething>( new Uri("http://localhost:5243/hangfire"), new recurring { StartTime=DateTime.Now, ScheduleId="hit", CronExpression= "* * * * *", }, new { Id = 1, Name = "test" });
+        } 
+        [HttpGet("StartRecurring2")]
+        public async Task IssueARecuuringJob2()
+        {
+            Uri sendEndpointUri = new("queue:hangfire");
+
+            var sendEndpoint = await _bus.GetSendEndpoint(sendEndpointUri);
+            await sendEndpoint.ScheduleRecurringSend<RecurringMessage>( new Uri($"queue:ahmed-kassem"), new recurring { StartTime = DateTime.Now, ScheduleId = "hit3", CronExpression = "* * * * *", },new RecurringMessage { Id =21, Name = "test" });
             await _bus.StartAsync();
             //await _recurringScheduler.ScheduleRecurringSend<DoSomething>( new Uri("http://localhost:5243/hangfire"), new recurring { StartTime=DateTime.Now, ScheduleId="hit", CronExpression= "* * * * *", }, new { Id = 1, Name = "test" });
         }
